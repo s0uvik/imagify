@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const Result = () => {
   const [image, setImage] = useState(assets.sample_img_1);
   const [isImageLoaded, setImageLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
-  const { generateImage } = useAppContext();
+  const { generateImage, user } = useAppContext();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +25,10 @@ const Result = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user]);
 
   return (
     <div className=" flex flex-col justify-center items-center min-h-[90vh]">

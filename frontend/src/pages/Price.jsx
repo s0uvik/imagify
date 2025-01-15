@@ -1,9 +1,69 @@
+import { toast } from "react-toastify";
 import { plans, assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_URL } from "../constant";
 
 const Price = () => {
-  const { user } = useAppContext();
+  const { user, loadCreditData, token, setShowLogin } = useAppContext();
+  const navigate = useNavigate();
+
+  const initPay = async (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Credits Payments",
+      description: "Credits Payments",
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        try {
+          const { data } = await axios.post(
+            `${API_URL}/api/user/verify-payment`,
+            response,
+            {
+              headers: { token },
+            }
+          );
+          if (data.success) {
+            loadCreditData();
+            navigate("/result");
+            toast.success("Credit added");
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const handlePayment = async (planId) => {
+    try {
+      if (!user) {
+        setShowLogin(true);
+      }
+      const { data } = await axios.post(
+        `${API_URL}/api/user/pay`,
+        { planId },
+        {
+          headers: { token },
+        }
+      );
+
+      if (data.success) {
+        initPay(data.order);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <motion.div
       className="min-h-[80vh] text-center pt-14 mb-10"
@@ -33,11 +93,17 @@ const Price = () => {
               {item.credits} credits
             </p>
             {user ? (
-              <button className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52">
+              <button
+                onClick={() => handlePayment(item.id)}
+                className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
+              >
                 Purchase
               </button>
             ) : (
-              <button className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52">
+              <button
+                onClick={() => setShowLogin(true)}
+                className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
+              >
                 Get Started
               </button>
             )}
