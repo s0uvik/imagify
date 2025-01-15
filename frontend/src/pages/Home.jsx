@@ -1,4 +1,5 @@
 import Description from "../components/Description";
+import GenerateBtn from "../components/GenerateBtn";
 import HeroSection from "../components/HeroSection";
 import StepsToCreate from "../components/StepsToCreate";
 import Testimonials from "../components/Testimonials";
@@ -10,6 +11,7 @@ const Home = () => {
       <StepsToCreate />
       <Description />
       <Testimonials />
+      <GenerateBtn />
     </div>
   );
 };
