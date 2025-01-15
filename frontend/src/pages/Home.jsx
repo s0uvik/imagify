@@ -1,6 +1,7 @@
 import Description from "../components/Description";
 import HeroSection from "../components/HeroSection";
 import StepsToCreate from "../components/StepsToCreate";
+import Testimonials from "../components/Testimonials";
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
       <HeroSection />
       <StepsToCreate />
       <Description />
+      <Testimonials />
     </div>
   );
 };
