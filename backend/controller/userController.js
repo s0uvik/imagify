@@ -70,3 +70,21 @@ export const loginUser = async (req, res) => {
     res.json({ message: error.message });
   }
 };
+
+export const userCredits = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await userModel.findById(userId);
+
+    if (user) {
+      return res.json({
+        credits: user.creditBalance,
+        user: { name: user.name },
+      });
+    }
+  } catch (error) {
+    console.log("error");
+    res.json({ message: error.message });
+  }
+};
