@@ -2,20 +2,64 @@ import { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import { motion } from "motion/react";
+import axios from "axios";
+import { API_URL } from "../constant";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Login");
-  const { setShowLogin } = useAppContext();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setShowLogin, setToken, setUser } = useAppContext();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => (document.body.style.overflow = "unset");
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (state === "Login") {
+        const { data } = await axios.post(`${API_URL}/api/user/login`, {
+          email,
+          password,
+        });
+        console.log(data);
+        if (data?.success) {
+          setShowLogin(false);
+          setToken(data.token);
+          setUser(data.user);
+          localStorage.setItem("token", data.token);
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const data = await axios.post(`${API_URL}/api/user/register`, {
+          name,
+          email,
+          password,
+        });
+        if (data?.success) {
+          setToken(data.token);
+          setUser(data.user);
+          localStorage.setItem("token", data.token);
+          setShowLogin(false);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center">
       <motion.form
         className=" relative bg-white p-10 rounded-lg text-slate-500"
+        onSubmit={handleSubmit}
         initial={{ opacity: 0.2, y: 50 }}
         transition={{ duration: 0.5 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -31,8 +75,8 @@ const Login = () => {
               className=" outline-none text-sm"
               placeholder="Full name"
               required
-              name=""
-              id=""
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
         )}
@@ -43,8 +87,8 @@ const Login = () => {
             className=" outline-none text-sm"
             placeholder="Email id"
             required
-            name=""
-            id=""
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className=" border px-6 py-3 flex items-center gap-2 rounded-full mt-4">
@@ -54,16 +98,20 @@ const Login = () => {
             className=" outline-none text-sm"
             placeholder="Password"
             required
-            name=""
-            id=""
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <p className=" text-sm text-blue-600 my-4 cursor-pointer">
           Forgot password
         </p>
-        <button className="text-white bg-zinc-800 px-7 py-2 sm:px-10 text-sm w-full rounded-full">
+        <button
+          type="submit"
+          className="text-white bg-zinc-800 px-7 py-2 sm:px-10 text-sm w-full rounded-full"
+        >
           {state === "Login" ? "Login" : "Create Account"}
         </button>
+
         {state === "Login" ? (
           <button
             type="button"

@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import { useAppContext } from "./context/AppContext";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const { showLogin } = useAppContext();
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/price" element={<Price />} />
       </Routes>
       <Footer />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };

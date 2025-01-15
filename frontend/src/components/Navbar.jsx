@@ -3,7 +3,7 @@ import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 
 const Navbar = () => {
-  const { user, setShowLogin } = useAppContext();
+  const { user, setShowLogin, logout, credit } = useAppContext();
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,9 @@ const Navbar = () => {
               onClick={() => navigate("/price")}
             >
               <img src={assets.credit_star} alt="credit" className=" w-5" />
-              <p className=" font-medium text-gray-600">Credit left: 50</p>
+              <p className=" font-medium text-gray-600">
+                Credit left: {credit}
+              </p>
             </button>
             <p className=" text-gray-600 max-sm:hidden pl-4">Hi, Souvik</p>
             <div className=" relative group">
@@ -33,7 +35,10 @@ const Navbar = () => {
                rounded-none pt-12"
               >
                 <u className=" list-none">
-                  <li className=" py-1 px-2 cursor-pointer pr-10 bg-white">
+                  <li
+                    onClick={logout}
+                    className=" py-1 px-2 cursor-pointer pr-10 bg-white"
+                  >
                     Logout
                   </li>
                 </u>

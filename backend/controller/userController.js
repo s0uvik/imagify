@@ -7,7 +7,7 @@ export const createUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     if ((!name, !email, !password)) {
-      return res.json({ message: "Missing details" });
+      return res.json({ success: false, message: "Missing details" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -27,11 +27,12 @@ export const createUser = async (req, res) => {
     res.json({
       success: true,
       message: "User created",
+      user: { name: user.name },
       token,
     });
   } catch (error) {
     console.log("error");
-    res.json({ message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -40,13 +41,13 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     if ((!email, !password)) {
-      return res.json({ message: "Missing details" });
+      return res.json({ success: false, message: "Missing details" });
     }
     const user = await userModel.findOne({ email });
-    console.log(user);
 
     if (!user) {
       return res.json({
+        success: false,
         message: "User dose not exist",
       });
     }
@@ -54,6 +55,7 @@ export const loginUser = async (req, res) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       return res.json({
+        success: false,
         message: "Invalid password",
       });
     }
@@ -63,11 +65,12 @@ export const loginUser = async (req, res) => {
     res.json({
       success: true,
       message: "Login successfully",
+      user: { name: user.name },
       token,
     });
   } catch (error) {
     console.log("error");
-    res.json({ message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
@@ -79,12 +82,13 @@ export const userCredits = async (req, res) => {
 
     if (user) {
       return res.json({
+        success: true,
         credits: user.creditBalance,
         user: { name: user.name },
       });
     }
   } catch (error) {
     console.log("error");
-    res.json({ message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };

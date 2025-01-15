@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 
 const Result = () => {
   const [image, setImage] = useState(assets.sample_img_1);
   const [isImageLoaded, setImageLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
+  const { generateImage } = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (input) {
+      setLoading(true);
+      const image = await generateImage(input);
+      console.log(1, image);
+      if (image) {
+        setImageLoaded(true);
+        setImage(image);
+        console.log(2, image);
+      }
+    }
+    setLoading(false);
   };
 
   return (

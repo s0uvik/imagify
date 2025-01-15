@@ -9,12 +9,14 @@ export const generateImage = async (req, res) => {
     const user = await userModel.findById(userId);
     if (!user || !prompt) {
       return res.json({
+        success: false,
         message: "Missing details",
       });
     }
 
     if (user.creditBalance === 0 || userModel.creditBalance < 0) {
       return res.json({
+        success: false,
         message: "No credit available, buy now",
         creditBalance: user.creditBalance,
       });
@@ -39,6 +41,7 @@ export const generateImage = async (req, res) => {
 
     if (!resultImage) {
       return res.json({
+        success: false,
         message: "Failed to create image",
       });
     }
@@ -48,13 +51,14 @@ export const generateImage = async (req, res) => {
     });
 
     res.json({
+      success: true,
       message: "Image created",
       creditBalance: user.creditBalance - 1,
       image: resultImage,
     });
   } catch (error) {
-    console.log(error);
     res.json({
+      success: false,
       message: error.message,
     });
   }
