@@ -1,10 +1,17 @@
 import { plans, assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import { motion } from "motion/react";
 
 const Price = () => {
   const { user } = useAppContext();
   return (
-    <div className="min-h-[80vh] text-center pt-14 mb-10">
+    <motion.div
+      className="min-h-[80vh] text-center pt-14 mb-10"
+      initial={{ opacity: 0.2, y: 50 }}
+      transition={{ duration: 0.5 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
       <button className="border border-gray-400 px-10 py-2 rounded-full mb-6">
         Our Plans
       </button>
@@ -37,7 +44,7 @@ const Price = () => {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
