@@ -89,7 +89,7 @@ const Price = () => {
             <p className="mt-3 mb-1 font-semibold">{item.id}</p>
             <p className="text-sm">{item.desc}</p>
             <p className=" mt-6">
-              <span className=" text-3xl font-medium">${item.price}</span> /{" "}
+              <span className=" text-3xl font-medium">₹{item.price}</span> /{" "}
               {item.credits} credits
             </p>
             {user ? (
