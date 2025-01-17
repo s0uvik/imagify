@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "build": "echo 'Preparing app for deployment...' && mkdir -p dist && cp -R .env dist/.env && cp -R index.js dist/index.js"
+    "build": "echo 'Preparing app for deployment...' && mkdir -p dist && cp -R index.js dist/index.js"
   },
   "author": "",
   "license": "ISC",
